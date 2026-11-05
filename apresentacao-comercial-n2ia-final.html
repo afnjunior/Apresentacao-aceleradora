@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Apresentação Comercial — N2IA Automação Inteligente para PMEs</title>
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-card: #1E293B;
+            --accent: #38BDF8;
+            --accent-green: #34D399;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
+            --pad-x: clamp(1rem, 4vw, 3rem);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+            width: 100%;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            min-width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            padding: 4rem var(--pad-x) 5.2rem var(--pad-x);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.6rem;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        h1 { font-size: clamp(1.5rem, 5vw, 2.4rem); color: var(--text-main); font-weight: 700; line-height: 1.22; letter-spacing: -0.01em; }
+        h2 { font-size: clamp(1.25rem, 3.8vw, 1.8rem); color: var(--accent); margin-bottom: 0.4rem; font-weight: 600; }
+        h3 { font-size: 1.05rem; color: var(--text-main); }
+        p { font-size: clamp(0.9rem, 2.2vw, 1.05rem); color: var(--text-muted); line-height: 1.5; }
+        .highlight { color: var(--accent); font-weight: bold; }
+        .highlight-green { color: var(--accent-green); font-weight: bold; }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #64748B;
+            line-height: 1.4;
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+            margin-top: 0.3rem;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0.6rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.35rem;
+            z-index: 200;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid var(--border);
+        }
+
+        .nav-dot {
+            width: 26px;
+            height: 26px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-dot:hover { border-color: var(--accent); color: var(--accent); }
+        .nav-dot.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
+
+        .controls {
+            position: fixed;
+            bottom: 0.8rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.6rem;
+            z-index: 200;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.55rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn:active { transform: scale(0.95); }
+        .btn-home { background: #334155; color: var(--accent); border-color: var(--accent); }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            z-index: 300;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 0.6rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; margin-top: 0.6rem; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .card-header { display: flex; align-items: center; gap: 0.6rem; }
+        .card p { font-size: 0.86rem; }
+
+        .svg-icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--accent); }
+
+        .flow-container {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-top: 0.6rem;
+        }
+
+        .flow-node {
+            background: var(--bg-primary);
+            border: 2px solid var(--accent);
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            width: 23%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .flow-node strong { color: var(--accent); font-size: 0.85rem; }
+        .flow-node span.desc { font-size: 0.74rem; color: var(--text-muted); font-weight: 400; line-height: 1.3; }
+        .flow-node.handoff { border-color: var(--accent-green); }
+        .flow-node.handoff strong { color: var(--accent-green); }
+        .flow-arrow { color: var(--accent-green); font-size: 1.2rem; font-weight: bold; align-self: center; }
+
+        .slide-cover {
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1rem;
+            background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%);
+        }
+
+        .badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent);
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid var(--accent);
+            font-weight: 600;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .swipe-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px dashed var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-top: 0.8rem;
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: fit-content;
+            animation: bounceSwipe 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceSwipe {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(6px); }
+        }
+
+        .callout {
+            padding: 0.9rem 1rem;
+            border: 1px solid rgba(56, 189, 248, 0.55);
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.72);
+        }
+        .callout p { font-size: 0.88rem; }
+
+        .cta-box {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--accent-green);
+            width: 100%;
+            text-align: center;
+        }
+
+        .cover-row { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 1.2rem; }
+        .cover-text { flex: 1 1 0; min-width: 0; max-width: 60%; }
+        .cover-title { font-size: clamp(1.5rem, 5vw, 2.5rem); margin-top: 0.6rem; }
+        .cover-lead { font-size: clamp(0.9rem, 2.4vw, 1.1rem); margin-top: 0.6rem; }
+        .cover-small { font-size: 0.78rem; color: #64748B; margin-top: 0.8rem; }
+
+        .cover-art {
+            width: 40%;
+            text-align: center;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cover-art::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        .cover-logo {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            mix-blend-mode: screen;
+            position: relative;
+            z-index: 1;
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+        }
+
+        .phase-number {
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+
+        .investment-label { font-size: 1.05rem; font-weight: 700; color: var(--accent); margin: 0.2rem 0; }
+
+        .slide-center { justify-content: center; align-items: center; text-align: center; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .slide-container, .progress-bar, .swipe-indicator, .cover-art::before, .cover-logo { transition: none; animation: none; }
+        }
+
+        @media (max-width: 900px) {
+            .grid-3 { grid-template-columns: minmax(0, 1fr); }
+            .flow-container { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+            .flow-node { width: 100%; }
+            .flow-arrow { align-self: center; transform: rotate(90deg); }
+        }
+
+        @media (max-width: 700px) {
+            .slide {
+                padding: 3.8rem var(--pad-x) calc(4.8rem + env(safe-area-inset-bottom, 0px));
+                justify-content: flex-start;
+                gap: 0.6rem;
+            }
+            .slide-cover { justify-content: center; }
+            .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); gap: 0.6rem; margin-top: 0.3rem; }
+            .card { padding: 0.8rem; }
+            .flow-container { padding: 0.7rem; }
+
+            .cover-row { flex-direction: column-reverse; align-items: flex-start; gap: 0.8rem; }
+            .cover-text { max-width: 100%; }
+            .cover-art { width: 100%; margin-top: 0.3rem; }
+            .cover-art::before { width: 180px; height: 180px; }
+            .cover-logo { max-width: 180px; }
+
+            .top-nav { top: 0.5rem; right: 0.8rem; padding: 0.2rem 0.35rem; gap: 0.25rem; }
+            .nav-dot { width: 24px; height: 24px; font-size: 0.7rem; }
+
+            .controls {
+                left: 0.8rem;
+                right: 0.8rem;
+                bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
+                gap: 0.4rem;
+                padding: 0.4rem 0.6rem;
+                background: rgba(15, 23, 42, 0.95);
+                -webkit-backdrop-filter: blur(8px);
+                backdrop-filter: blur(8px);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                justify-content: space-between;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            }
+            .controls .btn { flex: 1; justify-content: center; padding: 0.65rem 0.3rem; box-shadow: none; font-size: 0.8rem; }
+            .controls .btn-home { flex: 0 0 auto; padding: 0.65rem 0.7rem; }
+            .btn-label { display: none; }
+            .slide-center { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progress"></div>
+
+    <div class="top-nav" id="topNav">
+        <span class="nav-dot active" onclick="goToSlide(0)" title="Capa">1</span>
+        <span class="nav-dot" onclick="goToSlide(1)" title="Desafios">2</span>
+        <span class="nav-dot" onclick="goToSlide(2)" title="Solução">3</span>
+        <span class="nav-dot" onclick="goToSlide(3)" title="Etapas">4</span>
+        <span class="nav-dot" onclick="goToSlide(4)" title="Condições">5</span>
+        <span class="nav-dot" onclick="goToSlide(5)" title="Segurança & Ação">6</span>
+    </div>
+
+    <div class="slide-container" id="slideContainer">
+
+        <!-- SLIDE 1: CAPA -->
+        <section class="slide slide-cover">
+            <div class="cover-row">
+                <div class="cover-text">
+                    <span class="badge">AUTOMAÇÃO INTELIGENTE PARA PMEs</span>
+                    <h1 class="cover-title">Atendimento mais ágil e menos tarefas repetitivas com <span class="highlight">IA prática</span></h1>
+                    <p class="cover-lead">Soluções para apoiar o atendimento e organizar processos operacionais, com escopo definido em conjunto e participação humana nos pontos necessários.</p>
+                    <p class="cover-small">Canais, funcionalidades e integrações dependem do diagnóstico e do escopo aprovado.</p>
+                </div>
+                <div class="cover-art">
+                    <img src="logo-n2ia.jpg" alt="Logo N2IA - Inteligência que escala seu negócio" class="cover-logo">
+                </div>
+            </div>
+            <div>
+                <div class="swipe-indicator">
+                    <span>👈 👉</span> Arraste para o lado para ver o conteúdo
+                </div>
+                <p class="disclaimer">Proposta inicial sujeita a diagnóstico, definição de escopo e validação de viabilidade técnica.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: DESAFIOS -->
+        <section class="slide">
+            <div>
+                <h2>Desafios operacionais das PMEs</h2>
+                <p>Alguns gargalos que podem ser avaliados em um diagnóstico da operação:</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <h3>Demora no atendimento</h3>
+                    </div>
+                    <p>Mensagens recebidas em períodos de pico ou fora do horário de atendimento podem exigir triagem e organização mais eficientes.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16h16V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg>
+                        <h3>Processos manuais repetitivos</h3>
+                    </div>
+                    <p>Transferir informações entre mensagens, documentos e sistemas pode consumir tempo da equipe e gerar retrabalho.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+                        <h3>Escala operacional</h3>
+                    </div>
+                    <p>O aumento do volume de solicitações pode pressionar a capacidade de atendimento e a distribuição das atividades.</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>
+                        <h3>Informações dispersas</h3>
+                    </div>
+                    <p>Dados distribuídos em conversas e arquivos podem dificultar o acompanhamento e a consulta pela equipe.</p>
+                </div>
+            </div>
+
+            <div>
+                <div class="swipe-indicator" style="margin: 0.2rem auto 0 auto;"><span>👈 👉</span> Arraste para navegar</div>
+                <p class="disclaimer">A existência e a prioridade de cada oportunidade devem ser confirmadas com a empresa.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: SOLUÇÃO -->
+        <section class="slide">
+            <div>
+                <h2>Uma solução modular, com escopo definido</h2>
+                <p>Automação apoiada por regras acordadas, validação e encaminhamento humano quando aplicável.</p>
+            </div>
+
+            <div class="flow-container" aria-label="Fluxo conceitual da solução">
+                <div class="flow-node">
+                    <strong>1. Entrada</strong>
+                    <span class="desc">Mensagem ou documento recebido por um canal contemplado no escopo.</span>
+                </div>
+                <span class="flow-arrow">➔</span>
+                <div class="flow-node">
+                    <strong>2. Análise assistida por IA</strong>
+                    <span class="desc">Classificação e resposta ou extração com base nas informações e regras fornecidas.</span>
+                </div>
+                <span class="flow-arrow">➔</span>
+                <div class="flow-node">
+                    <strong>3. Organização e integração</strong>
+                    <span class="desc">Quando prevista e validada, a informação pode ser organizada para sistemas conectados. Alguns dados podem exigir conferência humana.</span>
+                </div>
+                <span class="flow-arrow">➔</span>
+                <div class="flow-node handoff">
+                    <strong>4. Revisão ou encaminhamento</strong>
+                    <span class="desc">Casos incertos ou fora das regras definidas podem ser direcionados para avaliação humana, conforme configuração acordada.</span>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Escopo padronizado e modular</h3>
+                    <p>Partimos de módulos e fluxos reutilizáveis, configurados para o contexto do cliente. O trabalho fica limitado às funcionalidades e integrações descritas e aprovadas no escopo.</p>
+                </div>
+                <div class="card">
+                    <h3>Adaptações avaliadas antes de assumir</h3>
+                    <p>Solicitações fora dos módulos previstos passam por avaliação separada de viabilidade, esforço e condições. Só serão realizadas após alinhamento e aprovação entre as partes.</p>
+                </div>
+            </div>
+
+            <div class="swipe-indicator" style="margin: 0.2rem auto 0 auto;"><span>👈 👉</span> Arraste para navegar</div>
+        </section>
+
+        <!-- SLIDE 4: ETAPAS -->
+        <section class="slide">
+            <div>
+                <h2>Etapas de trabalho</h2>
+                <p>Uma abordagem modular. O escopo, as dependências e a sequência serão definidos após o entendimento do projeto.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card">
+                    <span class="phase-number">Etapa 1</span>
+                    <h3>Entendimento e definição</h3>
+                    <p>Mapeamento do processo, informações disponíveis, regras de negócio, necessidades de integração e critérios de validação.</p>
+                </div>
+                <div class="card">
+                    <span class="phase-number">Etapa 2</span>
+                    <h3>Configuração e validação</h3>
+                    <p>Configuração dos módulos incluídos no escopo, seguida de testes e validação conjunta antes de qualquer disponibilização operacional.</p>
+                </div>
+                <div class="card">
+                    <span class="phase-number">Etapa 3</span>
+                    <h3>Disponibilização e acompanhamento</h3>
+                    <p>Se aprovada pelas partes e tecnicamente viável, a solução pode ser disponibilizada com acompanhamento e ajustes dentro das condições acordadas.</p>
+                </div>
+            </div>
+
+            <div class="callout">
+                <p><strong class="highlight">Importante:</strong> não há compromisso de implantação, resultado, integração específica ou data de disponibilização antes da conclusão do diagnóstico, da aprovação do escopo e da confirmação de viabilidade e dependências.</p>
+            </div>
+
+            <div>
+                <div class="swipe-indicator" style="margin: 0.2rem auto 0 auto;"><span>👈 👉</span> Arraste para navegar</div>
+                <p class="disclaimer">A possibilidade de um piloto com escritório contábil ainda está em negociação e não está confirmada.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: CONDIÇÕES COMERCIAIS -->
+        <section class="slide">
+            <div>
+                <h2>Condições comerciais a definir por projeto</h2>
+                <p>As condições serão apresentadas após a compreensão da necessidade e a aprovação do escopo.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <span class="phase-number">Implantação</span>
+                    <h3>Configuração inicial</h3>
+                    <p class="investment-label">Proposta após definição do escopo</p>
+                    <p>O que estiver incluído — como configuração, preparação de conteúdo e integrações — será descrito na proposta específica do projeto.</p>
+                </div>
+                <div class="card">
+                    <span class="phase-number">Após a disponibilização, se acordada</span>
+                    <h3>Suporte e evolução</h3>
+                    <p class="investment-label" style="color: var(--accent-green);">Condições a combinar</p>
+                    <p>Disponibilidade de suporte, monitoramento, limites de uso, manutenção e eventuais evoluções serão definidos expressamente entre as partes.</p>
+                </div>
+            </div>
+
+            <div class="callout">
+                <p>Esta apresentação não constitui proposta comercial vinculante. Valores, obrigações, limites de serviço e demais condições dependerão de proposta e contrato específicos, aceitos pelas partes.</p>
+            </div>
+
+            <div class="swipe-indicator" style="margin: 0.2rem auto 0 auto;"><span>👈 👉</span> Arraste para navegar</div>
+        </section>
+
+        <!-- SLIDE 6: SEGURANÇA E CTA -->
+        <section class="slide slide-center">
+            <span class="badge">SEGURANÇA, PRIVACIDADE E PRÓXIMOS PASSOS</span>
+            <h1 style="margin-top: 0.4rem;">Alinhamento antes da implantação</h1>
+            <p style="max-width: 640px;">Controles e responsabilidades devem ser definidos de acordo com o fluxo de dados, os sistemas envolvidos e o escopo do projeto.</p>
+
+            <div class="grid-3" style="margin: 0.8rem 0; width: 100%;">
+                <div class="card" style="text-align: left;">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <h3>Proteção de dados</h3>
+                    </div>
+                    <p>Medidas técnicas e organizacionais, retenção e acessos serão avaliados e documentados conforme o projeto e os acordos aplicáveis.</p>
+                </div>
+                <div class="card" style="text-align: left;">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <h3>Serviços de terceiros</h3>
+                    </div>
+                    <p>Provedores, canais e ferramentas serão identificados no desenho da solução, observando os termos e configurações de cada serviço.</p>
+                </div>
+                <div class="card" style="text-align: left;">
+                    <div class="card-header">
+                        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        <h3>Privacidade e responsabilidades</h3>
+                    </div>
+                    <p>Papéis, instruções, bases legais e retenção deverão ser avaliados e formalizados pelas partes, inclusive em documentos contratuais quando aplicável.</p>
+                </div>
+            </div>
+
+            <div class="cta-box">
+                <h2 style="margin-bottom: 0.3rem; color: var(--accent-green);">Vamos conversar sobre a sua operação?</h2>
+                <p>Uma conversa inicial pode ajudar a entender o contexto, avaliar oportunidades e verificar se há aderência aos módulos disponíveis. Qualquer próximo passo depende de alinhamento entre as partes.</p>
+            </div>
+
+            <p class="disclaimer">A apresentação é informativa e não garante resultados, disponibilidade, conformidade específica ou adequação a um caso sem análise prévia.</p>
+        </section>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-home" onclick="goToHome()" title="Voltar ao Início">
+            <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="btn-label">Início</span>
+        </button>
+        <button class="btn" onclick="prevSlide()">❮ Anterior</button>
+        <button class="btn" id="nextBtn" style="background: var(--accent); color: #0F172A;" onclick="nextSlide()">Próximo ❯</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const container = document.getElementById('slideContainer');
+        const progress = document.getElementById('progress');
+
+        function updateSlide() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+            slides.forEach((s, i) => { s.inert = i !== currentSlide; if (i === currentSlide) s.scrollTop = 0; });
+
+            document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.style.display = currentSlide === totalSlides - 1 ? 'none' : 'flex';
+        }
+
+        function goToSlide(index) { currentSlide = index; updateSlide(); }
+        function goToHome() { currentSlide = 0; updateSlide(); }
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlide(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
+
+        let touchStartX = 0, touchEndX = 0, touchStartY = 0, touchEndY = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        });
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        });
+        function handleSwipe() {
+            const dx = touchStartX - touchEndX;
+            const dy = touchStartY - touchEndY;
+            if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+            if (dx > 0) nextSlide(); else prevSlide();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'Home') goToHome();
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
